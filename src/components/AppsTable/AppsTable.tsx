@@ -64,8 +64,8 @@ export const AppsTable = () => {
     }
 
     return (
-        <Paper sx={{ minWidth: "800px", width: '100%', overflow: 'hidden', bgcolor: "secondary.main"}}>
-            <TableContainer sx={{ height: "70%", width: "800px" }}>
+        <Paper sx={{ minWidth: "900px", width: '100%', overflow: 'hidden', bgcolor: "secondary.main"}}>
+            <TableContainer sx={{ height: "70%" }}>
                 <Table stickyHeader>
                     <TableHead sx={{
                         "& .MuiTableCell-root": {bgcolor: "#434735", color: "#e7e7e5"}
@@ -78,6 +78,7 @@ export const AppsTable = () => {
                     </TableHead>
                     <TableBody sx={{
                         "& .MuiTableCell-root": {color: "#dbdbdb"},
+                        '& td': { borderBottom: 'none' }
                     }}>
                         {data
                             ?.appRows

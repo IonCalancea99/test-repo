@@ -6,7 +6,7 @@ export const AppLayout = () => {
     return (
         <Stack flexDirection={"row"} bgcolor={"primary.main"}>
             <Sidebar/>
-            <Stack width={"100%"}>
+            <Stack sx={{ width: "calc(100vw - 240px)"}}>
                 <Outlet />
             </Stack>
         </Stack>
