@@ -1,40 +1,36 @@
 import {
+    Box,
+    CircularProgress,
     Paper,
-    Stack,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TablePagination,
-    TableRow
+    TableRow, Typography
 } from "@mui/material";
-import {useGetAppsQuery} from "../../services/api.ts";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import type {Application} from "../../services/types.ts";
+import ErrorOutline from "@mui/icons-material/ErrorOutline";
 
-export const AppsTable = () => {
+interface AppsTableProps {
+    onPageChange: (page: number) => void;
+    onPageSizeChange: (size: 25 | 50) => void;
+    data: Application[];
+    totalCount: number;
+    isLoading: boolean;
+    error: boolean;
+}
+
+export const AppsTable = ({onPageChange, onPageSizeChange, data, totalCount, isLoading, error}: AppsTableProps) => {
     const [page, setPage] = useState(0);
-
     const [rowsPerPage, setRowsPerPage] = useState<25 | 50>(25);
 
-    const {data, isLoading, isSuccess, error, refetch} = useGetAppsQuery({pageSize: rowsPerPage, pageNumber: page});
-    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
     useEffect(() => {
-        if (timeoutRef.current && isSuccess) {
-            clearTimeout(timeoutRef.current);
-        }
-
-    }, [isSuccess]);
-
-    useEffect(() => {
-        timeoutRef.current = setTimeout(() => refetch(), 500)
-    }, [error, refetch]);
-
-    useEffect(() => {
-        refetch();
-    }, [page, rowsPerPage, refetch]);
+        onPageChange(page);
+        onPageSizeChange(rowsPerPage);
+    }, [page, rowsPerPage, onPageChange, onPageSizeChange]);
 
     const handleChangePage = (_: unknown, newPage: number) => {
         setPage(newPage);
@@ -49,23 +45,38 @@ export const AppsTable = () => {
 
     if (isLoading) {
         return (
-            <Stack flexDirection={"row"} alignItems={"center"} height={"100vh"} width={"100%"}>
-                Loading...
-            </Stack>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "space-around", gap: 2, width: '100%' }}>
+                <CircularProgress size={24} color={"info"}/>
+                <span>Loading data...</span>
+            </Box>
         );
     }
 
     if (error) {
         return (
-            <Stack flexDirection={"row"} alignItems={"center"} height={"100vh"} width={"100%"}>
-                Error loading data
-            </Stack>
+            <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+                textAlign="center"
+                gap={2}
+                width={"100%"}
+            >
+                <ErrorOutline color="error" sx={{ fontSize: 64 }} />
+                <Typography variant="h5" color="error">
+                    Oops! Something went wrong.
+                </Typography>
+                <Typography color="text.secondary">
+                    Please try again later or contact support.
+                </Typography>
+            </Box>
         );
     }
 
     return (
-        <Paper sx={{ minWidth: "900px", width: '100%', overflow: 'hidden', bgcolor: "secondary.main"}}>
-            <TableContainer sx={{ height: "70%" }}>
+        <Paper sx={{ minWidth: "900px", width: '100%', overflow: 'hidden', bgcolor: "secondary.main", padding: 1 }}>
+            <TableContainer sx={{ overflowY: "hidden" }}>
                 <Table stickyHeader>
                     <TableHead sx={{
                         "& .MuiTableCell-root": {bgcolor: "#434735", color: "#e7e7e5"}
@@ -81,7 +92,6 @@ export const AppsTable = () => {
                         '& td': { borderBottom: 'none' }
                     }}>
                         {data
-                            ?.appRows
                             .map((row: Application) => (
                                 <TableRow key={row.appName} hover>
                                     <TableCell>{row.appName}</TableCell>
@@ -95,7 +105,7 @@ export const AppsTable = () => {
 
             <TablePagination
                 component="div"
-                count={data?.totalCount ?? 0}
+                count={totalCount ?? 0}
                 page={page}
                 rowsPerPageOptions={[25, 50]}
                 onPageChange={handleChangePage}

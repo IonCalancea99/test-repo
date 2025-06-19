@@ -1,17 +1,33 @@
-import {Stack, TextField, Typography} from "@mui/material"
+import {Box, Stack, TextField, Typography} from "@mui/material"
 import {useEffect, useState} from "react";
 
-export const AppsFilter = () => {
+interface AppsFilterProps {
+    onNameChange: (name: string) => void;
+    onCategoryChange: (category: string) => void;
+}
+
+export const AppsFilter = ({onCategoryChange, onNameChange}: AppsFilterProps) => {
     const [name, setName] = useState("");
     const [category, setCategory] = useState("");
+
+    useEffect(() => {
+        onNameChange(name);
+    }, [name, onNameChange]);
+
+
+    useEffect(() => {
+        onCategoryChange(category);
+    }, [category, onCategoryChange]);
 
     useEffect(() => {
 
     }, [name, category]);
     return (
-        <Stack width={"300px"} height={"100%"} spacing={2} bgcolor={"secondary.main"} padding={1}
+        <Stack width={"300px"} spacing={2} bgcolor={"secondary.main"} padding={1}
         >
-            <Typography variant="h6" color="#e7e7e5"> Filters </Typography>
+            <Box padding={1} bgcolor={"#434735"}>
+                <Typography variant="h6" color="#e7e7e5"> Filters </Typography>
+            </Box>
             <TextField
                 slotProps={{
                     input: {

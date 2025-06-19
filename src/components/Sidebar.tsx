@@ -9,13 +9,13 @@ const navItems = [
 
 export default function Sidebar() {
     return (
-        <Stack height={"100vh"} width={"240px"} spacing={2} bgcolor={"#393939"}>
+        <Stack minHeight={"100%"} direction={"column"} width={"240px"} spacing={2} bgcolor={"#393939"}>
             <Toolbar>
                 <Box
                     component="img"
                     src="https://cdn.prod.website-files.com/644fc991ce69ff0d3bdbeb63/6797b48d427a3acb97fd3b55_Logo.svg"
                     alt="Logo"
-                    sx={{ height: 40, mr: 2 }}
+                    sx={{ mr: 2 }}
                 />
             </Toolbar>
             <List>
